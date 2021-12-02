@@ -1,15 +1,15 @@
 import { buildSchema } from 'graphql';
 import {
   addProducts,
-  checkProductExists,
+  getProduct,
   getProducts,
 } from '../controllers/productsGraphql';
 
 // GraphQL schema
 export const graphqlSchema = buildSchema(`
     type Query {
-        getProducts: [Course],
-        checkProductExists(id: String!):Course,
+        getProducts:[Course],
+        getProduct(_id: String!):Course,
     },
     type Mutation {
         addProducts(producto: ItemBase!): Course
@@ -31,6 +31,6 @@ export const graphqlSchema = buildSchema(`
 // Root resolver
 export const graphqlRoot = {
   getProducts,
+  getProduct,
   addProducts,
-  checkProductExists,
 };

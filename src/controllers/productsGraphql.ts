@@ -1,43 +1,37 @@
 import { productsPersistencia } from '../persistencia/productos';
-import { Request, Response, NextFunction } from 'express';
 
-export const getProducts = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
+export const getProducts = async (args: any) => {
+  const id = Number(args.id);
 
   const producto = id
     ? await productsPersistencia.leerUno(id)
     : await productsPersistencia.leer();
 
-  res.json({
-    data: producto,
-  });
+  return producto;
 };
 
-export const checkProductExists = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.params.id) {
-    const id = req.params.id;
+export const getProduct = async (args: any) => {
+  if (args._id) {
+    const id = args._id;
 
     const producto = productsPersistencia.leerUno(id);
 
     if (!producto) {
-      return res.status(404).json({
+      return {
         msg: 'producto not found',
-      });
+      };
     }
+    return producto;
   }
-  next();
+  return true; // next();
 };
 
-export const addProducts = async (req: Request, res: Response) => {
-  const { title, price, thumbnail } = req.body;
+export const addProducts = async (args: any) => {
+  const { title, price, thumbnail } = args.body;
   const newItem = productsPersistencia.guardar(title, price, thumbnail);
 
-  res.json({
+  return {
     msg: 'producto agregado con exito',
     data: newItem,
-  });
+  };
 };
